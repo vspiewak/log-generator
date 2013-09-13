@@ -6,13 +6,8 @@ import java.util.concurrent.Executors;
 
 public class LogExecutor {
 
-    public static final int DEFAULT_NB_THREADS = 4;
     private final int nbThreads;
     private ExecutorService executor;
-
-    public LogExecutor() {
-        this(DEFAULT_NB_THREADS);
-    }
 
     public LogExecutor(int nbThreads) {
         this.nbThreads = nbThreads;
@@ -21,6 +16,13 @@ public class LogExecutor {
 
     public LogExecutor add(Callable<Long> task) {
         executor.submit(task);
+        return this;
+    }
+
+    public LogExecutor addAll(Iterable<Callable<Long>> tasks) {
+        for(Callable<Long> task : tasks) {
+            executor.submit(task);
+        }
         return this;
     }
 
