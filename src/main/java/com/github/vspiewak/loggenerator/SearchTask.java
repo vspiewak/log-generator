@@ -10,14 +10,14 @@ public class SearchTask implements Callable<Long> {
     private static final Logger log = LoggerFactory.getLogger(SearchTask.class);
     private final long id;
 
-        public SearchTask(final long id) {
-            this.id = id;
-        }
+    public SearchTask(final long id) {
+        this.id = id;
+    }
 
-        @Override
-        public Long call() throws Exception {
-            log.info("{} - {}", id, Utils.getRandomIP());
-            return id;
-        }
+    @Override
+    public Long call() throws Exception {
+        log.info("{} - {}", id, Utils.getRandomIP());
+        return id;
+    }
 
 }

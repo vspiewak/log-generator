@@ -20,7 +20,7 @@ public class LogExecutor {
     }
 
     public LogExecutor addAll(Iterable<Callable<Long>> tasks) {
-        for(Callable<Long> task : tasks) {
+        for (Callable<Long> task : tasks) {
             executor.submit(task);
         }
         return this;
