@@ -29,9 +29,8 @@ public class App {
         LogExecutor executor = new LogExecutor(params.threads);
 
         while (counter.get() < params.logs) {
-            long number = counter.incrementAndGet();
-            SearchTask aSearchTask = new SearchTask(number);
-            SellTask aSellTask = new SellTask(number);
+            SearchTask aSearchTask = new SearchTask(counter.incrementAndGet());
+            SellTask aSellTask = new SellTask(counter.incrementAndGet());
             executor.addAll(Arrays.asList(aSearchTask, aSellTask));
         }
 
