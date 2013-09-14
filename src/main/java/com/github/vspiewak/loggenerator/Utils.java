@@ -1,18 +1,13 @@
 package com.github.vspiewak.loggenerator;
 
-import com.sun.org.apache.xml.internal.security.algorithms.implementations.SignatureDSA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Utils {
 
@@ -21,8 +16,13 @@ public class Utils {
 
     static {
         try {
-            URI uri = Thread.currentThread().getContextClassLoader().getResource("ips.txt").toURI();
-            ips.addAll(Files.readAllLines(Paths.get(uri), StandardCharsets.UTF_8));
+            InputStream is = Utils.class.getClassLoader().getResourceAsStream("ips.txt");
+            Scanner scan = new Scanner(is);
+            while (scan.hasNext()) {
+                String ip = scan.next().trim();
+                if (ip.length() > 0)
+                    ips.add(ip);
+            }
         } catch (Exception e) {
             log.error("Error during ip read/parsing", e);
         }
