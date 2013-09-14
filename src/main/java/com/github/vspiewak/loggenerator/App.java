@@ -12,10 +12,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class App {
 
     private static final Logger log = LoggerFactory.getLogger(App.class);
-    private static AtomicLong counter = new AtomicLong(0);
+    private static AtomicLong total = new AtomicLong(0);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
+        // parse params
         InputParameters params = new InputParameters();
         JCommander commander = new JCommander(params);
         try {
@@ -25,26 +26,59 @@ public class App {
             System.exit(1);
         }
 
+        // init
         log.trace("starting");
 
-        long start_time = System.nanoTime();
-        LogExecutor executor = new LogExecutor(params.threads);
+        final long start = System.nanoTime();
+        final int threads = params.threads;
 
-        while (counter.get() < params.logs) {
-            int seed = new Random().nextInt(10);
-            if (seed > 6) {
-                executor.add(new SellRequest(counter.incrementAndGet()));
-            } else {
-                executor.add(new SearchRequest(counter.incrementAndGet()));
+        // add shutdown hook
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                long elapsed_loop = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+                log.trace("generated {} logs in {}ms using {} threads", total.get(), elapsed_loop, threads);
+                log.trace("shutdown");
             }
-        }
+        });
 
-        executor.finish();
+        // will be repeated every params.repeat milliseconds
+        do {
 
-        long elapsed_time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start_time);
+            final long start_loop = System.nanoTime();
+            AtomicLong counter = new AtomicLong(0);
+            LogExecutor executor = new LogExecutor(threads);
 
-        log.trace("generated {} logs in {}ms using {} threads", counter.get(), elapsed_time, params.threads);
-        log.trace("shutdown");
+            //generate params.logs
+            while (counter.get() < params.logs) {
+                total.incrementAndGet();
+                counter.incrementAndGet();
+                int seed = new Random().nextInt(10);
+                if (seed > 6) {
+                    executor.add(new SellRequest(total.get()));
+                } else {
+                    executor.add(new SearchRequest(total.get()));
+                }
+            }
+
+            // wait the end
+            executor.finish();
+
+            // if repeat option
+            if (params.repeat > 0) {
+
+                // print log generated during the loop
+                long elapsed_loop = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start_loop);
+                log.trace("generated {} logs in {}ms using {} threads", counter.get(), elapsed_loop, params.threads);
+
+                // sleep until the end of the interval
+                long sleep_time = params.repeat - elapsed_loop;
+                if (sleep_time > 0) {
+                    log.trace("sleep: {}ms", sleep_time);
+                    Thread.sleep(sleep_time);
+                }
+            }
+
+        } while (params.repeat > 0);
 
     }
 
