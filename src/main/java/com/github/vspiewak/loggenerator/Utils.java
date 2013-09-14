@@ -45,27 +45,25 @@ public class Utils {
     }
 
     private static double getRandomPrice() {
-        int min = 40;
-        int max = 200;
+        int min = 30;
+        int max = 99;
         return min + new Random().nextInt(max - min) + 0.99;
     }
 
     public static String getRandomSearch() {
-        return getRandomSearch(new Random().nextInt(10));
+        return getRandomIP() + LOG_SEPARATOR + getRandomSearch(new Random().nextInt(10));
     }
 
     private static String getRandomSearch(int seed) {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append(getRandomIP());
-
         sb.append(LOG_SEPARATOR);
-        sb.append(getRandomFromArray(cat.values()));
+        sb.append(getRandomFromArray(categories.values()));
 
         sb.append(LOG_SEPARATOR);
         if (seed > 7) {
-            sb.append(getRandomFromArray(matiere.values()));
+            sb.append(getRandomFromArray(matierials.values()));
         }
 
         sb.append(LOG_SEPARATOR);
@@ -75,30 +73,50 @@ public class Utils {
 
         sb.append(LOG_SEPARATOR);
         if (seed > 3) {
-            sb.append(getRandomFromArray(size.values()));
+            sb.append(getRandomFromArray(sizes.values()));
         }
 
         return sb.toString();
     }
 
+    public static String getRandomClient() {
+        int rnd = new Random().nextInt(500);
+        String sex = "M";
+        if(rnd > 300) sex = "F";
+        StringBuffer sb = new StringBuffer();
+        sb.append("client").append(rnd).append("@gmail.com")
+                .append(LOG_SEPARATOR)
+                .append(sex);
+        return sb.toString();
+    }
+
     public static String getRandomSell() {
-        return getRandomFromList(products);
+        return new StringBuffer()
+                .append(getRandomIP())
+                .append(LOG_SEPARATOR)
+                .append(getRandomClient())
+                .append(LOG_SEPARATOR)
+                .append(getRandomFromList(products))
+                .toString();
     }
 
     private static void initProducts(int n) {
         for (int i = 0; i < n; i++) {
-            products.add((i + 1) + LOG_SEPARATOR + getRandomSearch(100) + LOG_SEPARATOR + getRandomPrice());
+            StringBuffer sb = new StringBuffer()
+                    .append("ref:"+ (i + 1))
+                    .append(getRandomSearch(100)).append(LOG_SEPARATOR)
+                    .append(getRandomPrice());
+            products.add(sb.toString());
         }
     }
 
-    private enum size {XS, S, M, L, XL}
+    private enum sizes { XS, S, M, L, XL }
 
-    private enum colors {BLANC, NOIR, BLEU, VERT, ROSE, MARRON}
+    private enum colors { BLANC, NOIR, BLEU, VERT, ROSE, MARRON }
 
-    private enum cat {TSHIRT, DEBARDEUR, PULL, BOXER, CALCON, SLIP}
+    private enum categories { TSHIRT, DEBARDEUR, PULL, BOXER, CALCON, SLIP }
 
-
-    private enum matiere {COTON, SOIE, SYNTHETIQUE}
+    private enum matierials { COTON, SOIE, SYNTHETIQUE }
 
     static {
         readFromFile("ips.txt", ips);
