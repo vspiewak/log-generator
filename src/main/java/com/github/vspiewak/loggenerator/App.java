@@ -5,7 +5,7 @@ import com.beust.jcommander.ParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -25,20 +25,22 @@ public class App {
             System.exit(1);
         }
 
-        log.trace("initialization");
+        log.trace("starting");
 
+        long start_time = System.nanoTime();
         LogExecutor executor = new LogExecutor(params.threads);
 
         while (counter.get() < params.logs) {
-            SearchTask aSearchTask = new SearchTask(counter.incrementAndGet());
-            SellTask aSellTask = new SellTask(counter.incrementAndGet());
-            executor.addAll(Arrays.asList(aSearchTask, aSellTask));
+            int seed = new Random().nextInt(10);
+            if (seed > 6) {
+                executor.add(new SellRequest(counter.incrementAndGet()));
+            } else {
+                executor.add(new SearchRequest(counter.incrementAndGet()));
+            }
         }
 
-        log.trace("initialization done");
+        executor.finish();
 
-        long start_time = System.nanoTime();
-        executor.execute();
         long elapsed_time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start_time);
 
         log.trace("generated {} logs in {}ms using {} threads", counter.get(), elapsed_time, params.threads);
