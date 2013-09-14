@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class App {
@@ -24,7 +25,7 @@ public class App {
             System.exit(1);
         }
 
-        log.trace("starting");
+        log.trace("initialization");
 
         LogExecutor executor = new LogExecutor(params.threads);
 
@@ -37,13 +38,10 @@ public class App {
         log.trace("initialization done");
 
         long start_time = System.nanoTime();
-
         executor.execute();
+        long elapsed_time = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start_time);
 
-        long end_time = System.nanoTime();
-        double difference = (end_time - start_time) / 1e6;
-
-        log.trace("generated {} logs in {}ms using {} threads", counter.get(), (int) difference, params.threads);
+        log.trace("generated {} logs in {}ms using {} threads", counter.get(), elapsed_time, params.threads);
         log.trace("shutdown");
 
     }
