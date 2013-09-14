@@ -14,6 +14,6 @@ public class SellRequest implements Runnable {
 
     @Override
     public void run() {
-        log.info("{} - {}", id, Utils.getRandomSell());
+        log.info("{}", Utils.getRandomSell(id));
     }
 }

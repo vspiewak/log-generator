@@ -14,6 +14,6 @@ public class SearchRequest implements Runnable {
 
     @Override
     public void run() {
-        log.info("{} - {}", id, Utils.getRandomSearch());
+        log.info("{}", Utils.getRandomSearch(id));
     }
 }

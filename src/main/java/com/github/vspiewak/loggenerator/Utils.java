@@ -50,61 +50,67 @@ public class Utils {
         return min + new Random().nextInt(max - min) + 0.99;
     }
 
-    public static String getRandomSearch() {
-        return getRandomIP() + LOG_SEPARATOR + getRandomSearch(new Random().nextInt(10));
+    public static String getRandomClient(long id) {
+        String sex = "M";
+        if (id % 3 == 0) sex = "F";
+        return new StringBuilder()
+                .append("client").append((id%1000)+1).append("@gmail.com")
+                .append(LOG_SEPARATOR)
+                .append(sex)
+                .toString();
     }
 
-    private static String getRandomSearch(int seed) {
+    public static String getRandomSell(long id) {
+        return new StringBuilder()
+                .append(id)
+                .append(LOG_SEPARATOR)
+                .append(getRandomIP())
+                .append(LOG_SEPARATOR)
+                .append(getRandomClient(id))
+                .append(LOG_SEPARATOR)
+                .append(getRandomFromList(products))
+                .toString();
+    }
 
-        StringBuilder sb = new StringBuilder();
+    public static String getRandomSearch(long id) {
+        StringBuilder sb = new StringBuilder()
+                .append(id)
+                .append(LOG_SEPARATOR)
+                .append(getRandomIP())
+                .append(LOG_SEPARATOR)
+                .append(getRandomFromArray(categories.values()));
 
         sb.append(LOG_SEPARATOR);
-        sb.append(getRandomFromArray(categories.values()));
-
-        sb.append(LOG_SEPARATOR);
-        if (seed > 7) {
+        if (id % 4 == 0) {
             sb.append(getRandomFromArray(matierials.values()));
         }
 
         sb.append(LOG_SEPARATOR);
-        if (seed > 4) {
+        if (id % 3 == 0) {
             sb.append(getRandomFromArray(colors.values()));
         }
 
         sb.append(LOG_SEPARATOR);
-        if (seed > 3) {
+        if (id % 2 == 0) {
             sb.append(getRandomFromArray(sizes.values()));
         }
 
         return sb.toString();
     }
 
-    public static String getRandomClient() {
-        int rnd = new Random().nextInt(500);
-        String sex = "M";
-        if(rnd > 300) sex = "F";
-        StringBuffer sb = new StringBuffer();
-        sb.append("client").append(rnd).append("@gmail.com")
-                .append(LOG_SEPARATOR)
-                .append(sex);
-        return sb.toString();
-    }
-
-    public static String getRandomSell() {
-        return new StringBuffer()
-                .append(getRandomIP())
-                .append(LOG_SEPARATOR)
-                .append(getRandomClient())
-                .append(LOG_SEPARATOR)
-                .append(getRandomFromList(products))
-                .toString();
-    }
-
     private static void initProducts(int n) {
         for (int i = 0; i < n; i++) {
-            StringBuffer sb = new StringBuffer()
-                    .append("ref:"+ (i + 1))
-                    .append(getRandomSearch(100)).append(LOG_SEPARATOR)
+            StringBuilder sb = new StringBuilder()
+                    .append("ref:" + (i + 1))
+                    .append(LOG_SEPARATOR)
+                    .append(getRandomFromArray(categories.values()))
+                    .append(LOG_SEPARATOR)
+                    .append(getRandomFromArray(matierials.values()))
+                    .append(LOG_SEPARATOR)
+                    .append(getRandomFromArray(colors.values()))
+                    .append(LOG_SEPARATOR)
+                    .append(getRandomFromArray(sizes.values()))
+                    .append(LOG_SEPARATOR)
                     .append(getRandomPrice());
             products.add(sb.toString());
         }
