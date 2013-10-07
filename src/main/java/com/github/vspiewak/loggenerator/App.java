@@ -53,7 +53,7 @@ public class App {
                 total.incrementAndGet();
                 counter.incrementAndGet();
                 int seed = new Random().nextInt(10);
-                if (seed > 6) {
+                if (seed > 7) {
                     executor.add(new SellRequest(total.get()));
                 } else {
                     executor.add(new SearchRequest(total.get()));
