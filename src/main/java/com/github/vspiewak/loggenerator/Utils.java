@@ -30,6 +30,10 @@ public class Utils {
         }
     }
 
+    public static String fmtE(Enum e) {
+        return e.name().replaceAll("_", " ");
+    }
+
     private static <E> E getRandomFromList(List<E> list) {
         int index = new Random().nextInt(list.size());
         return list.get(index);
@@ -72,76 +76,58 @@ public class Utils {
                 .append(LOG_SEPARATOR)
                 .append(getRandomClient(id))
                 .append(LOG_SEPARATOR)
-                .append(getRandomFromList(products))
+                .append(getRandomFromList(Product.products))
                 .toString();
     }
 
     public static String getRandomSearch(long id) {
+        Product product = getRandomFromList(Product.products);
+
         StringBuilder sb = new StringBuilder()
                 .append("id=")
                 .append(id)
                 .append(LOG_SEPARATOR)
                 .append("ip=")
                 .append(getRandomIP())
-                .append(LOG_SEPARATOR)
-                .append("cat=")
-                .append(getRandomFromArray(categories.values()));
+                .append(LOG_SEPARATOR);
 
-        if (id % 4 == 0) {
-            sb.append(LOG_SEPARATOR)
-                    .append("mat=")
-                    .append(getRandomFromArray(matierials.values()));
-        }
+        if(id % 4 == 0) {
 
-        if (id % 3 == 0) {
-            sb.append(LOG_SEPARATOR)
-                    .append("color=")
-                    .append(getRandomFromArray(colors.values()));
-        }
+            sb.append(product);
 
-        if (id % 2 == 0) {
-            sb.append(LOG_SEPARATOR)
-                    .append("size=")
-                    .append(getRandomFromArray(sizes.values()));
+        } else {
+
+            sb.append("category=")
+              .append(fmtE(product.getCategorie()));
+
+            if (id % 3 == 0) {
+                sb.append(LOG_SEPARATOR)
+                        .append("brand=")
+                        .append(product.getBrand());
+            }
+
+            if (id % 2 == 0) {
+                if(product.getColor() != null) {
+                    sb.append(LOG_SEPARATOR);
+                    sb.append("color=").append(fmtE(product.getColor()));
+                }
+                if(!product.getOptions().isEmpty()) {
+                    sb.append(LOG_SEPARATOR);
+                    sb.append("options=");
+                    for(Product.Options o : product.getOptions()) {
+                        sb.append(fmtE(o)).append("|");
+                    }
+                    sb.setLength(sb.length() - 1);
+                }
+            }
+
         }
 
         return sb.toString();
     }
 
-    private static void initProducts(int n) {
-        for (int i = 0; i < n; i++) {
-            StringBuilder sb = new StringBuilder()
-                    .append("ref=" + (i + 1))
-                    .append(LOG_SEPARATOR)
-                    .append("cat=")
-                    .append(getRandomFromArray(categories.values()))
-                    .append(LOG_SEPARATOR)
-                    .append("mat=")
-                    .append(getRandomFromArray(matierials.values()))
-                    .append(LOG_SEPARATOR)
-                    .append("color=")
-                    .append(getRandomFromArray(colors.values()))
-                    .append(LOG_SEPARATOR)
-                    .append("size=")
-                    .append(getRandomFromArray(sizes.values()))
-                    .append(LOG_SEPARATOR)
-                    .append("price=")
-                    .append(getRandomPrice());
-            products.add(sb.toString());
-        }
-    }
-
-    private enum sizes {XS, S, M, L, XL}
-
-    private enum colors {BLANC, NOIR, BLEU, VERT, ROSE, MARRON}
-
-    private enum categories {TSHIRT, DEBARDEUR, PULL, BOXER, CALCON, SLIP}
-
-    private enum matierials {COTON, SOIE, SYNTHETIQUE}
-
     static {
         readFromFile("ips.txt", ips);
-        initProducts(100);
     }
 
 }
