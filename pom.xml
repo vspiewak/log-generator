@@ -42,7 +42,6 @@
         <jcommander.version>1.30</jcommander.version>
         <junit.version>4.10</junit.version>
 
-        <maven.versions>[2.2.1, 3.1.0)</maven.versions>
         <java.version>1.6</java.version>
         <maven.shade.plugin>2.1</maven.shade.plugin>
         <maven.jar.plugin>2.4</maven.jar.plugin>
@@ -212,11 +211,6 @@
 
                             <!-- Rules: -->
                             <rules>
-
-                                <!-- Check Maven version -->
-                                <requireMavenVersion>
-                                    <version>${maven.versions}</version>
-                                </requireMavenVersion>
 
                                 <!-- Check Java version -->
                                 <requireJavaVersion>
