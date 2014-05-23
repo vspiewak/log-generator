@@ -14,12 +14,19 @@ public class Utils {
     private static final String LOG_SEPARATOR = ",";
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static final List<String> ips = new ArrayList<String>();
-    private static final List<String> products = new ArrayList<String>();
+    private static final List<String> userAgents = new ArrayList<String>();
+
+    static {
+        readFromFile("ips.txt", ips);
+        readFromFile("useragents.txt", userAgents);
+    }
 
     private static void readFromFile(String file, List<String> list) {
+
         try {
             InputStream is = Utils.class.getClassLoader().getResourceAsStream(file);
             Scanner scan = new Scanner(is);
+            scan.useDelimiter("\n");
             while (scan.hasNext()) {
                 String line = scan.next().trim();
                 if (line.length() > 0)
@@ -28,6 +35,7 @@ public class Utils {
         } catch (Exception e) {
             log.error("Error during read/parse of file: ", file);
         }
+
     }
 
     public static String fmtE(Enum e) {
@@ -46,6 +54,10 @@ public class Utils {
 
     private static String getRandomIP() {
         return getRandomFromList(ips);
+    }
+
+    private static String getRandomUA() {
+        return getRandomFromList(userAgents);
     }
 
     private static double getRandomPrice() {
@@ -71,6 +83,9 @@ public class Utils {
                 .append("id=")
                 .append(id)
                 .append(LOG_SEPARATOR)
+                .append("ua=")
+                .append(getRandomUA())
+                .append(LOG_SEPARATOR)
                 .append("ip=")
                 .append(getRandomIP())
                 .append(LOG_SEPARATOR)
@@ -86,6 +101,9 @@ public class Utils {
         StringBuilder sb = new StringBuilder()
                 .append("id=")
                 .append(id)
+                .append(LOG_SEPARATOR)
+                .append("ua=")
+                .append(getRandomUA())
                 .append(LOG_SEPARATOR)
                 .append("ip=")
                 .append(getRandomIP())
@@ -124,10 +142,6 @@ public class Utils {
         }
 
         return sb.toString();
-    }
-
-    static {
-        readFromFile("ips.txt", ips);
     }
 
 }
