@@ -9,7 +9,7 @@ import static com.github.vspiewak.loggenerator.Utils.fmtE;
 public class Product {
 
     public static final String MODEL_SEPARATOR = " - ";
-    public static final String TO_STRING_SEPARATOR = ",";
+    public static final String TO_STRING_SEPARATOR = "&";
 
     public static List<Product> products = Arrays.asList(
 

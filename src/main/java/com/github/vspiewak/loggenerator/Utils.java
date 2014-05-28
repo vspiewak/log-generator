@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Utils {
 
-    private static final String LOG_SEPARATOR = ",";
+    private static final String LOG_SEPARATOR = "&";
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static final List<String> ips = new ArrayList<String>();
     private static final List<String> userAgents = new ArrayList<String>();
